@@ -3,6 +3,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+import torch
+
 from isaaclab.terrains import TerrainImporterCfg
 from isaaclab.utils import configclass
 
@@ -61,3 +63,9 @@ class NavTerrainImporterCfg(TerrainImporterCfg):
 
     add_colliders: bool = False
     """Add colliders to meshes"""
+
+    custom_origins: torch.Tensor | None = None
+    """Custom origins for environment placement. If provided, these origins will be used to place environments instead of computing them via grid or curriculum logic. Shape should be (num_rows, num_cols, 3) or compatible. Default is None."""
+
+    random_seed: int | None = None
+    """Random seed for deterministic terrain generation. If None, random behavior is non-deterministic. Default is None."""
