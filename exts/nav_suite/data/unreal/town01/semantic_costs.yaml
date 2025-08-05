@@ -1,0 +1,36 @@
+# Copyright (c) 2024-2025 ETH Zurich (Robotic Systems Lab)
+# Author: Pascal Roth
+# All rights reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Default cost values
+defaults:
+  obstacle_cost: 2.0
+  road_loss: 1.5
+  traversable_cost: 0.0
+  traversable_unintended_loss: 0.5
+  terrain_loss: 1.0
+
+# Semantic class cost mapping
+semantic_costs:
+  void: ${obstacle_cost}
+  road: ${road_loss}
+  sidewalk: ${traversable_cost}
+  crosswalk: ${traversable_cost}
+  floor: ${traversable_cost}
+  vehicle: ${obstacle_cost}
+  building: ${obstacle_cost}
+  wall: ${obstacle_cost}
+  fence: ${obstacle_cost}
+  pole: ${obstacle_cost}
+  traffic_sign: ${obstacle_cost}
+  traffic_light: ${obstacle_cost}
+  bench: ${obstacle_cost}
+  vegetation: ${obstacle_cost}
+  terrain: ${terrain_loss}
+  water_surface: ${obstacle_cost}
+  sky: ${obstacle_cost}
+  dynamic: ${obstacle_cost}
+  static: ${obstacle_cost}
+  furniture: ${obstacle_cost}

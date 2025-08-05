@@ -1,0 +1,17 @@
+default: ground
+
+tree:
+  - Tree
+  - Forest
+  - pine
+  - Section0
+  - Section1
+  - SM_dwarf_pine
+
+water:
+  - river
+  - water
+
+ground:
+  - landscape
+  - grass

@@ -1,0 +1,186 @@
+default: floor
+
+sidewalk:
+  - Sidewalk
+
+floor:
+  - SM_ParkSquare05_4HISMA
+  - SM_ParkSquare02_1HISMA
+  - SM_ParkSquare05_4HISMA
+  - SM_ParkSquare05_6HISMA
+  - SM_ParkSquare05_3HISMA
+  - SM_ParkSquare04_1HISMA
+  - SM_ParkSquare05_1HISMA
+  - SM_ParkSquare02_2HISMA
+  - SM_ParkSquare11_1HISMA
+  - SM_ParkSquare05_7HISMA
+  - SM_ParkSquare05_8HISMA
+  - SM_ParkSquare05_9HISMA
+  - SM_ParkSquare05_5HISMA
+  - SM_ParkSquare12_1HISMA
+  - SM_ParkSquare05_2HISMA
+  - TennisField
+  - BaseballField
+  - BasketballField
+  - Asphalt
+  - FootballField
+  - SM_ParkSquare03_7HISMA_598
+  - SM_PoolHISMA
+  - Border
+  - Manhole
+  - ParkPath
+  - RoadDecal
+  - MergedRoad
+
+bridge:
+  - Bridge
+
+tunnel:
+  - tunnel
+
+building:
+  - CafeBuilding
+  - House
+  - Tribune
+  - Pier
+  - Bower
+
+stairs:
+  - SM_ParkSquare03_3HISMA
+  - SM_ParkSquare05_3HISMA
+  - SM_ParkSquare07_1HISMA
+  - SM_ParkSquare05_12HISMA
+  - SM_ParkSquare03_2HISMA
+  - SM_ParkSquare03_5HISMA
+  - SM_ParkSquare03_5HISMA
+  - SM_ParkSquare03_7HISMA
+  - ParkSquare03_8HISMA
+  - ParkSquare13_7HISMA
+  - SM_ParkSquare03_2HISMA_687
+  - SM_ParkSquare03_1HISMA
+  - SM_ParkSquare05_2HISMA
+
+wall:
+  - SM_ParkSquare02_4HISMA
+  - SM_ParkSquare01_5HISMA
+  - SM_ParkSquare06_1HISMA
+  - SM_ParkSquare02_8HISMA
+  - SM_ParkSquare06_4HISMA
+  - SM_ParkSquare10HISMA
+  - SM_ParkSquare06_5HISMA
+  - SM_ParkSquare06_3HISMA
+  - SM_ParkSquare06_2HISMA
+  - SM_ParkSquare02_7HISMA
+  - SM_ParkSquare02_1HISMA
+  - SM_ParkSquare03_6HISMA
+  - SM_ParkSquare06_6HISMA
+  - SM_ParkSquare12_2HISMA
+  - SM_ParkSquare07_2HISMA
+  - SM_ParkSquare01_3HISMA
+  - SM_ParkSquare01_1HISMA
+  - SM_ParkSquare07_3HISMA
+  - SM_ParkSquare05_12HISMA
+  - SM_ParkSquare02_6HISMA
+  - SM_ParkSquare01_10HISMA
+  - SM_ParkSquare02_3HISMA
+  - SM_ParkSquare02_5HISMA
+  - SM_ParkSquare02_5HISMA_209
+  - SM_ParkSquare12_3HISMA
+  - SM_ParkSquare01_2HISMA
+  - SM_ParkSquare01_9HISMA
+  - SM_ParkSquare03_4HISMA
+  - ParkSquare14_3HISMA
+  - ParkSquare13_5HISMA
+  - SM_ParkSquare02_2HISMA
+  - SM_ParkSquare01_7HISMA
+  - SM_ParkSquare01_4HISMA
+  - ParkSquare01_11HISMA
+  - SM_ParkSquare01_6HISMA
+  - SM_ParkSquare01_8HISMA
+  - ParkSquare13_7HISMA
+  - BaseballGate
+  - SM_Fountain01HISMA
+  - MergedParkSquare
+
+fence:
+  - ParkSquare14_3HISMA
+  - ParkSquare13_1HISMA
+  - ParkSquare14_2HISMA
+  - ParkSquare13_3HISMA
+  - ParkSquare13_2HISMA
+  - Fence
+  - ParkSquare13_3HISMA_600
+  - ParkSquare13_4HISMA_603
+  - ParkSquare13_5HISMA_605
+  - MergedPark03_10
+  - ParkSquare14_1HISMA
+  - ParkSquare13_6HISMA
+
+pole:
+  - LampPost
+  - TrafficBarrel
+  - TrashCan
+
+traffic_sign:
+  - RoadSigns
+
+traffic_light:
+  - TennisFloodlight
+  - TrafficLight
+
+bench:
+  - Bench
+
+vegetation:
+  - BP_SplineMeshes  # all spline meshes
+  - Amur
+  - Elm
+  - Ivy
+  - Maple
+  - Amur
+  - Bush
+  - grass
+  - Weeping
+  - Rock
+
+terrain:
+  - Landscape
+  - SM_ParkSquare11_3HISMA
+  - MergedGround
+  - Instancedfoliageactor_2
+  - SM_ParkSquare11_2HISMA
+  - MergedLeaks
+
+water_surface:
+  - Plane
+  - PlanarReflection
+
+ceiling:
+  - SM_ParkSquare09_1HISMA
+  - SM_ParkSquare09_3HISMA
+  - SM_ParkSquare09_4HISMA
+
+dynamic:
+  - DryLeaves06HISMA
+  - DryLeaves07HISMA
+  - LeakDecal
+  - Newspaper
+
+static:
+  - Statue
+  - PlayGround  # all playground meshes
+  - TennisNet
+  - TennisUmpiresChair
+  - Umbrella
+  - BasketballHoop
+  - DrinkingFountain
+  - FoodStalls
+  - FoodballGate
+  - RoadBlock
+  - Sphere
+  - Tribune
+  - FootballGate
+
+furniture:
+  - Table
+  - CafeChair

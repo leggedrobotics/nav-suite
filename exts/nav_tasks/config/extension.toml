@@ -1,0 +1,23 @@
+[package]
+
+# Note: Semantic Versioning is used: https://semver.org/
+version = "0.3.10"
+
+# Description
+title = "IsaacLab Navigation RL Tasks"
+description="Extension for Reinforcement Learning Tasks for Navigation"
+authors =["Pascal Roth"]
+repository = "https://github.com/leggedrobotics/isaac_nav_suite"
+category = "robotics"
+keywords = ["kit", "robotics"]
+readme  = "docs/README.md"
+
+[dependencies]
+"omni.kit.uiapp" = {}
+"isaacsim.gui.components" = {}
+"isaaclab" = {}
+"nav_suite" = {}
+
+# Main python module this extension provides.
+[[python.module]]
+name = "nav_tasks"

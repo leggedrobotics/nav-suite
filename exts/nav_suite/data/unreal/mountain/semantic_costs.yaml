@@ -1,0 +1,11 @@
+# Copyright (c) 2024-2025 ETH Zurich (Robotic Systems Lab)
+# Author: Pascal Roth
+# All rights reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Semantic class cost mapping for Mountain categories
+semantic_costs:
+  tree: 1.0
+  ground: 0.0
+  water: 1.0

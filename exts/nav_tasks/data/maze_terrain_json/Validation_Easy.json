@@ -1,0 +1,320 @@
+[
+    {
+        "shape": "line",
+        "x": 0.0,
+        "y": 0.0,
+        "x2": 15.0,
+        "y2": 0.0,
+        "dimensions": {
+            "thickness": 0.2,
+            "height": 0.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 15.0,
+        "y": 0.0,
+        "x2": 15.0,
+        "y2": 15.0,
+        "dimensions": {
+            "thickness": 0.2,
+            "height": 0.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 15.0,
+        "y": 15.0,
+        "x2": 0.0,
+        "y2": 15.0,
+        "dimensions": {
+            "thickness": 0.2,
+            "height": 0.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 0.0,
+        "y": 15.0,
+        "x2": 0.0,
+        "y2": 0.0,
+        "dimensions": {
+            "thickness": 0.2,
+            "height": 0.5
+        }
+    },
+
+    {
+        "shape": "line",
+        "x": 2.5,
+        "y": 2.0,
+        "x2": 7.5,
+        "y2": 2.5,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 7.5,
+        "y": 0.0,
+        "x2": 7.5,
+        "y2": 6.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.0
+        }
+    },
+    {
+        "shape": "line",
+        "x": 0.0,
+        "y": 5.0,
+        "x2": 5.0,
+        "y2": 5.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 0.0,
+        "y": 6.5,
+        "x2": 5.0,
+        "y2": 6.5,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 2.8,
+        "y": 3.5,
+        "dimensions": {
+            "radius": 0.25,
+            "height": 2.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 5,
+        "y": 3.5,
+        "dimensions": {
+            "radius": 0.25,
+            "height": 2.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 1.0,
+        "y": 1.0,
+        "dimensions": {
+            "radius": 0.25,
+            "height": 2.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 3.5,
+        "y": 0.3,
+        "dimensions": {
+            "radius": 0.25,
+            "height": 2.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 10.0,
+        "y": 2.5,
+        "dimensions": {
+            "radius": 0.75,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 12.5,
+        "y": 5.0,
+        "dimensions": {
+            "radius": 0.75,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 10.0,
+        "y": 6.0,
+        "dimensions": {
+            "radius": 0.75,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 5.5,
+        "y": 8.0,
+        "dimensions": {
+            "radius": 0.5,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "line",
+        "x": 14.5,
+        "y": 0.0,
+        "x2": 12.0,
+        "y2": 3.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 2.0,
+        "y": 6.5,
+        "x2": 2.0,
+        "y2": 10.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 0.0,
+        "y": 12.5,
+        "x2": 6.0,
+        "y2": 12.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 10.0,
+        "y": 8.0,
+        "x2": 10.0,
+        "y2": 12.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 10.0,
+        "y": 8.0,
+        "x2": 12.0,
+        "y2": 8.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 11.5,
+        "y": 9.5,
+        "x2": 15.0,
+        "y2": 9.5,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 13.5,
+        "y": 7.0,
+        "dimensions": {
+            "radius": 0.25,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "line",
+        "x": 10,
+        "y": 12.0,
+        "x2": 12.5,
+        "y2": 12.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 8.0,
+        "y": 11.0,
+        "dimensions": {
+            "radius": 0.75,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "line",
+        "x": 4,
+        "y": 10.0,
+        "x2": 6.0,
+        "y2": 10.0,
+        "dimensions": {
+            "thickness": 0.75,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 13.0,
+        "y": 14.5,
+        "dimensions": {
+            "radius": 0.25,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "circle",
+        "x": 11.0,
+        "y": 14.0,
+        "dimensions": {
+            "radius": 0.25,
+            "height": 2.0
+        }
+    },
+    {
+        "shape": "line",
+        "x": 10.0,
+        "y": 12.0,
+        "x2": 9.0,
+        "y2": 13.5,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+    {
+        "shape": "line",
+        "x": 3.0,
+        "y": 13.5,
+        "x2": 6.0,
+        "y2": 13.5,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    },
+        {
+        "shape": "line",
+        "x": 9.0,
+        "y": 13.5,
+        "x2": 9.0,
+        "y2": 15.0,
+        "dimensions": {
+            "thickness": 0.25,
+            "height": 1.5
+        }
+    }
+]

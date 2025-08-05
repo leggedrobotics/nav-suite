@@ -1,0 +1,54 @@
+# Copyright (c) 2024-2025 ETH Zurich (Robotic Systems Lab)
+# Author: Pascal Roth
+# All rights reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Default cost values
+defaults:
+  obstacle_cost: 1.0
+  traversable_cost: 0.0
+
+# Semantic class cost mapping for Matterport3D mpcat40 categories
+semantic_costs:
+  void: ${obstacle_cost}
+  wall: ${obstacle_cost}
+  floor: ${traversable_cost}
+  chair: ${obstacle_cost}
+  door: ${obstacle_cost}
+  table: ${obstacle_cost}
+  picture: ${obstacle_cost}
+  cabinet: ${obstacle_cost}
+  cushion: ${obstacle_cost}
+  window: ${obstacle_cost}
+  sofa: ${obstacle_cost}
+  bed: ${obstacle_cost}
+  curtain: ${obstacle_cost}
+  chest_of_drawers: ${obstacle_cost}
+  plant: ${obstacle_cost}
+  sink: ${obstacle_cost}
+  stairs: ${obstacle_cost}
+  ceiling: ${obstacle_cost}
+  toilet: ${obstacle_cost}
+  stool: ${obstacle_cost}
+  towel: ${obstacle_cost}
+  mirror: ${obstacle_cost}
+  tv_monitor: ${obstacle_cost}
+  shower: ${obstacle_cost}
+  column: ${obstacle_cost}
+  bathtub: ${obstacle_cost}
+  counter: ${obstacle_cost}
+  fireplace: ${obstacle_cost}
+  lighting: ${obstacle_cost}
+  beam: ${obstacle_cost}
+  shelving: ${obstacle_cost}
+  blinds: ${obstacle_cost}
+  gym_equipment: ${obstacle_cost}
+  seating: ${obstacle_cost}
+  board_panel: ${obstacle_cost}
+  furniture: ${obstacle_cost}
+  appliances: ${obstacle_cost}
+  clothes: ${obstacle_cost}
+  objects: ${obstacle_cost}
+  misc: ${obstacle_cost}
+  unlabeled: ${obstacle_cost}

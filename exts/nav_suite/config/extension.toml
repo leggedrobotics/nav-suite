@@ -1,0 +1,21 @@
+[package]
+
+# Note: Semantic Versioning is used: https://semver.org/
+version = "0.2.3"
+
+# Description
+title = "IsaacLab Navigation Suite"
+description="An extension designed to enhance navigation research in IsaacLab. It supports advanced environment imports—including Matterport and Unreal Engine—with integrated semantic information, and provides tools for data collection and custom sensor implementations."
+authors =["Pascal Roth"]
+repository = "https://github.com/leggedrobotics/isaac_nav_suite"
+category = "robotics"
+keywords = ["kit", "robotics"]
+readme  = "docs/README.md"
+
+[dependencies]
+"isaacsim" = {}
+"isaaclab" = {}
+
+# Main python module this extension provides.
+[[python.module]]
+name = "nav_suite"
