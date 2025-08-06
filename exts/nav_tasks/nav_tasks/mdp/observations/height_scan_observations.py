@@ -16,7 +16,7 @@ from isaaclab.managers import SceneEntityCfg
 from isaaclab.sensors import RayCaster
 from isaaclab.sim import SimulationContext
 from isaaclab.utils import configclass
-from isaaclab.utils.warp import raycast_dynamic_meshes
+from isaaclab.utils.warp import raycast_mesh
 
 if TYPE_CHECKING:
     from isaaclab.envs import ManagerBasedEnv, ManagerBasedRLEnv
@@ -84,15 +84,9 @@ def height_scan_door_recognition(
     clip_height: tuple[float, float] = (-1.0, 0.5),
     return_height: bool = True,
 ) -> torch.Tensor | None:
-    """Height scan that xplicitly accounts for doors in the scene.
+    """Height scan from the given sensor w.r.t. the sensor's frame given in the square pattern of the sensor.
 
-    Doors should be recognized by performing two more raycasting operations: shortly above the ground up and down.
-    Then it will be checked if the up raycast has a hit and if the hit is lower than the initial raycast.
-    Moreover, it is checked if the distance between up and down raycast is above a certain threshold.
-
-    Args:
-
-    """
+    Explicitly account for doors in the scene."""
 
     # extract the used quantities (to enable type-hinting)
     sensor: RayCaster = env.scene.sensors[sensor_cfg.name]
@@ -106,24 +100,20 @@ def height_scan_door_recognition(
     ray_directions = torch.zeros_like(ray_origins)
     ray_directions[..., 2] = -1.0
 
-    hit_point_down = raycast_dynamic_meshes(
+    hit_point_down = raycast_mesh(
         ray_origins,
         ray_directions,
-        mesh_ids_wp=sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+        mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
         max_dist=sensor.cfg.max_distance,
-        mesh_positions_w=sensor._mesh_positions_w if sensor.cfg.track_mesh_transforms else None,
-        mesh_orientations_w=sensor._mesh_orientations_w if sensor.cfg.track_mesh_transforms else None,
     )[0]
 
     ray_directions[..., 2] = 1.0
 
-    hit_point_up = raycast_dynamic_meshes(
+    hit_point_up = raycast_mesh(
         ray_origins,
         ray_directions,
-        mesh_ids_wp=sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+        mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
         max_dist=sensor.cfg.max_distance,
-        mesh_positions_w=sensor._mesh_positions_w if sensor.cfg.track_mesh_transforms else None,
-        mesh_orientations_w=sensor._mesh_orientations_w if sensor.cfg.track_mesh_transforms else None,
     )[0]
 
     lower_height = (
@@ -241,13 +231,11 @@ class HeightScanOcculusionModifier:
         ray_directions[torch.isnan(ray_directions)] = 0.0
 
         # raycast from the robot to intended hit positions
-        ray_hits_w = raycast_dynamic_meshes(
+        ray_hits_w = raycast_mesh(
             robot_position,
             ray_directions,
-            mesh_ids_wp=self._sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+            mesh=self._sensor.meshes[self._sensor.cfg.mesh_prim_paths[0]],
             max_dist=self._sensor.cfg.max_distance,
-            mesh_positions_w=self._sensor._mesh_positions_w if self._sensor.cfg.track_mesh_transforms else None,
-            mesh_orientations_w=self._sensor._mesh_orientations_w if self._sensor.cfg.track_mesh_transforms else None,
         )[0]
 
         # get not visible parts of the height-scan
@@ -323,9 +311,7 @@ def height_scan_square_exp_occlu(
 ) -> torch.Tensor:
     """Height scan from the given sensor w.r.t. the sensor's frame given in the square pattern of the sensor.
 
-    Explicitly account for occulsions of the terrain.
-
-    FIXME: IMPLEMENT AGAIN AS MODIFIER WITH NEW ISAAC SIM RELEASE"""
+    Explicitly account for occulsions of the terrain."""
 
     # extract the used quantities (to enable type-hinting)
     sensor: RayCaster = env.scene.sensors[sensor_cfg.name]
@@ -345,13 +331,11 @@ def height_scan_square_exp_occlu(
     ray_directions[torch.isnan(ray_directions)] = 0.0
 
     # raycast from the robot to intended hit positions
-    ray_hits_w = raycast_dynamic_meshes(
+    ray_hits_w = raycast_mesh(
         robot_position,
         ray_directions,
-        mesh_ids_wp=sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+        mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
         max_dist=sensor.cfg.max_distance,
-        mesh_positions_w=sensor._mesh_positions_w if sensor.cfg.track_mesh_transforms else None,
-        mesh_orientations_w=sensor._mesh_orientations_w if sensor.cfg.track_mesh_transforms else None,
     )[0]
 
     # get not visible parts of the height-scan
@@ -418,7 +402,6 @@ def height_scan_square_exp_occlu_with_door_recognition(
         shape,
         door_height_thres=door_height_thres,
         offset=offset,
-        clip_height=clip_height,
         return_height=False,
     )
     return height_scan_square_exp_occlu(env, asset_cfg, sensor_cfg, shape, offset, clip_height)

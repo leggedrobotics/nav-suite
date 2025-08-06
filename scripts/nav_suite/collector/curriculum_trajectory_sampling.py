@@ -75,7 +75,7 @@ class TestTerrainCfg(InteractiveSceneCfg):
             size=(1.0, 1.0),
         ),
         mesh_prim_paths=["/World/Terrain"],
-        attach_yaw_only=True,
+        ray_alignment="yaw",
     )
     # extras - light
     light = AssetBaseCfg(
