@@ -47,14 +47,8 @@ def height_scan_clipped(
 
     The provided offset (Defaults to 0.5) is subtracted from the returned values.
     """
-    # extract the used quantities (to enable type-hinting)
-    sensor: RayCaster = env.scene.sensors[sensor_cfg.name]
-    # height scan: height = sensor_height - hit_point_z - offset
-    height = sensor.data.ray_hits_w[..., 2] + offset - sensor.data.pos_w[:, 2].unsqueeze(1)
-    # assign max distance to inf values
-    height[torch.isinf(height)] = sensor.cfg.max_distance
-    height[torch.isnan(height)] = sensor.cfg.max_distance
-
+    # get the bounded height scan
+    height = height_scan_bounded(env, sensor_cfg, offset)
     # clip to max observable height
     height = torch.clip(height, clip_height[0], clip_height[1])
 
