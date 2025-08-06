@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.2.4 (2025-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+- Updated licencing headers of semantic cost mapping files in ``data`` folder
+
+
 0.2.3 (2025-06-11)
 ~~~~~~~~~~~~~~~~~~
 
