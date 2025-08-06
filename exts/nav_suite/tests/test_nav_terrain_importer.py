@@ -614,5 +614,5 @@ def test_incomplete_semantic_mapping_file_error(simulation_context, basic_terrai
         # Should throw error that not all meshes have semantic mapping
         NavTerrainImporter(terrain_config)
         assert False
-    except (ValueError):
+    except ValueError:
         pass
