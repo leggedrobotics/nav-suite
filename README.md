@@ -97,14 +97,14 @@ Visualizations of the trained policy in action with an example reward curve for 
 ## Installation
 
 1. Install IsaacLab following the [IsaacLab installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html).
-2. Clone this repo and install the extensions. Note that the nav_suite has been tested with ``IsaacLab v2.1.0``  (commit 91ad494). We try to be in sync with the latest IsaacLab version, but minor issues can occur. \
+2. Clone this repo and install the extensions. Note that the nav_suite has been tested with ``IsaacLab v2.1.1``  (last checked commit 19b24c7). We try to be in sync with the latest IsaacLab version, but minor issues can occur. \
   NOTE: Please use an IsaacLab version where [PR77](https://github.com/leggedrobotics/IsaacLab-Internal/pull/77) have been merged, they contain changes necessary to run the scripts successfully.
 
 ```bash
 git clone git@github.com:isaac-sim/IsaacLab.git
 git clone git@github.com:leggedrobotics/isaac-nav-suite.git
 cd <path-to-your-isaaclab-repo>
-git checkout v2.1.0
+git checkout v2.1.1
 
 ./isaaclab.sh -p -m pip install -e <path-to-your-nav-suite-repo>/exts/nav_suite
 ./isaaclab.sh -p -m pip install -e <path-to-your-nav-suite-repo>/exts/nav_tasks

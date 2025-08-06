@@ -1,6 +1,23 @@
 Changelog
 ---------
 
+0.3.9 (2025-08-04)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+
+- Add height scan observation terms that include following terms:
+  - :meth:`nav_tasks.mdp.observations.height_scan_observations.height_scan_bounded`
+  - :meth:`nav_tasks.mdp.observations.height_scan_observations.height_scan_clipped`
+  - :meth:`nav_tasks.mdp.observations.height_scan_observations.height_scan_square`
+  - :meth:`nav_tasks.mdp.observations.height_scan_observations.height_scan_door_recognition`
+  - :meth:`nav_tasks.mdp.observations.height_scan_observations.height_scan_square_exp_occlu`
+  - :meth:`nav_tasks.mdp.observations.height_scan_observations.height_scan_square_exp_occlu_with_door_recognition`
+  - :class:`nav_tasks.mdp.observations.height_scan_observations.HeightScanOcculusionModifier`
+  - :class:`nav_tasks.mdp.observations.height_scan_observations.HeightScanOcculusionDoorRecognitionModifier`
+
+
 0.3.8 (2025-06-11)
 ~~~~~~~~~~~~~~~~~~
 
