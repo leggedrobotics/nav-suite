@@ -1,0 +1,19 @@
+on:
+  push:
+  pull_request_target:
+jobs:
+  move-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: olivr/copybara-action@v1.2.5
+        with:
+          ssh_key: ${{ secrets.SSH_KEY_COPYBARA }}
+          access_token: ${{ secrets.GH_TOKEN_COPYBARA }}
+          sot_repo: leggedrobotics/nav-suite
+          sot_branch: main
+          destination_repo: leggedrobotics/nav-suite-internal
+          destination_branch: main
