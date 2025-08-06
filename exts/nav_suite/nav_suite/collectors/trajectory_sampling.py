@@ -232,7 +232,7 @@ class TrajectorySampling:
                 clipped = randomized_samples[mask][:samples_per_terrain_level]
                 samples_by_terrain[row, :, :3] = self.terrain_analyser.points[clipped[:, 0].type(torch.int64)]
                 samples_by_terrain[row, :, 3:6] = self.terrain_analyser.points[clipped[:, 1].type(torch.int64)]
-                samples_by_terrain[row, :, 6] = clipped[:, 2].type(torch.int64)
+                samples_by_terrain[row, :, 6] = clipped[:, 2]
         else:
             subterrain_idx_origins = (
                 randomized_samples_subterrains_origins[:, 0] * num_cols + randomized_samples_subterrains_origins[:, 1]
@@ -255,7 +255,7 @@ class TrajectorySampling:
                 clipped = randomized_samples[mask][:samples_per_terrain]
                 samples_by_terrain[row, col, :, :3] = self.terrain_analyser.points[clipped[:, 0].type(torch.int64)]
                 samples_by_terrain[row, col, :, 3:6] = self.terrain_analyser.points[clipped[:, 1].type(torch.int64)]
-                samples_by_terrain[row, col, :, 6] = clipped[:, 2].type(torch.int64)
+                samples_by_terrain[row, col, :, 6] = clipped[:, 2]
 
         # save curr_data as pickle
         if self.cfg.enable_saved_paths_loading:

@@ -106,7 +106,7 @@ class StayedAtGoal(ManagerTermBase):
         self.time_at_goal[currently_at_goal] += env.step_dt
         self.time_at_goal[~currently_at_goal] = 0.0
 
-        # check if the time at goal exceeds the threshold, don't worry about resetting buffer this is called later
+        # check if the time at goal exceeds the threshold
         return self.time_at_goal > time_threshold
 
     def reset(self, env_ids: Sequence[int] | None = None) -> None:

@@ -50,9 +50,7 @@ def height_scan_clipped(
     # get the bounded height scan
     height = height_scan_bounded(env, sensor_cfg, offset)
     # clip to max observable height
-    height = torch.clip(height, clip_height[0], clip_height[1])
-
-    return height
+    return torch.clip(height, clip_height[0], clip_height[1])
 
 
 def height_scan_square(
@@ -61,8 +59,19 @@ def height_scan_square(
     shape: list[int] | None = None,
     offset: float = 0.5,
     clip_height: tuple[float, float] = (-1.0, 0.5),
+    flip: bool = True,
 ) -> torch.Tensor:
-    """Height scan from the given sensor w.r.t. the sensor's frame given in the square pattern of the sensor."""
+    """Height scan from the given sensor w.r.t. the sensor's frame given in the square pattern of the sensor.
+
+    .. note::
+        The height scan  pattern is created from neg to pos whereas in the robotics frame, the left of the robot is
+        positive and the right is negative. To align the frames, the height scan is fliped (can be reversed by setting
+        flip=False)
+
+    Args:
+        shape: The shape of the height scan. If None, the shape is inferred from the height scan.
+        flip: Whether to flip the height scan.
+    """
     # call regular height scanner function
     height = height_scan_clipped(env, sensor_cfg, offset=offset, clip_height=clip_height)
     shape = shape if shape is not None else [int(math.sqrt(height.shape[1])), int(math.sqrt(height.shape[1]))]
@@ -70,7 +79,8 @@ def height_scan_square(
     height_square = torch.unflatten(height, 1, (shape[0], shape[1]))
     # NOTE: the height scan is mirrored as the pattern is created from neg to pos whereas in the robotics frame, the left of
     # the robot is positive and the right is negative
-    height_square = torch.flip(height_square, dims=[1])
+    if flip:
+        height_square = torch.flip(height_square, dims=[1])
     # unqueeze to make compatible with convolutional layers
     return height_square.unsqueeze(1)
 
