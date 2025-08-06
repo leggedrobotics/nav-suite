@@ -1,6 +1,17 @@
 Changelog
 ---------
 
+0.2.4 (2025-08-04)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^^^
+
+- Added pytest testing suite for :class:`nav_suite.terrains.nav_terrain_importer.NavTerrainImporter`
+- Added :attr:`nav_suite.terrains.nav_terrain_importer_cfg.NavTerrainImporterCfg.random_seed` parameter for deterministic random sampling behavior.
+- Added :attr:`nav_suite.terrains.nav_terrain_importer_cfg.NavTerrainImporterCfg.custom_origins` parameter
+
+
 0.2.3 (2025-06-11)
 ~~~~~~~~~~~~~~~~~~
 

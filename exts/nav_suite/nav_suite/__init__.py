@@ -15,6 +15,9 @@ NAVSUITE_EXT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"
 NAVSUITE_DATA_DIR = os.path.join(NAVSUITE_EXT_DIR, "data")
 """Path to the extension data directory."""
 
+NAVSUITE_TEST_ASSETS_DIR = os.path.join(NAVSUITE_EXT_DIR, "tests", "assets")
+"""Path to the extension test assets directory."""
+
 NAVSUITE_METADATA = toml.load(os.path.join(NAVSUITE_EXT_DIR, "config", "extension.toml"))
 """Extension metadata dictionary parsed from the extension.toml file."""
 

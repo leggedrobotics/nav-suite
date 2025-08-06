@@ -78,12 +78,14 @@ class NavTerrainImporter(TerrainImporter):
             This method adds the options to add grid-like origins to a USD terrain.
         """
         # decide whether to compute origins in a grid or based on curriculum
-        if origins is not None:
-            # convert to numpy
-            if isinstance(origins, np.ndarray):
-                origins = torch.from_numpy(origins)
+        terrain_origins_source = self.cfg.custom_origins if self.cfg.custom_origins is not None else origins
+
+        if terrain_origins_source is not None:
+            # convert to torch tensor if needed
+            if isinstance(terrain_origins_source, np.ndarray):
+                terrain_origins_source = torch.from_numpy(terrain_origins_source)
             # store the origins
-            self.terrain_origins = origins.to(self.device, dtype=torch.float)
+            self.terrain_origins = terrain_origins_source.to(self.device, dtype=torch.float)
             # compute environment origins
             self.env_origins = self._compute_env_origins_curriculum(self.cfg.num_envs, self.terrain_origins)
         # uniform env_spacing for usd_size
@@ -458,6 +460,8 @@ class NavTerrainImporter(TerrainImporter):
 
             # Convert the asset
             converter_instance._convert_asset(self.cfg.asset_converter)
+
+            self.cfg.usd_path = base_path + ".usd"
 
             # update the usd_path
             return base_path + ".usd"
