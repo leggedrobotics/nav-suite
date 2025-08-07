@@ -445,8 +445,11 @@ class TerrainAnalysis:
         bounds = []
         for mesh in self._raycaster.meshes.values():
             curr_bounds = torch.zeros((2, 3))
-            curr_bounds[0] = torch.tensor(mesh.points).max(dim=0)[0]
-            curr_bounds[1] = torch.tensor(mesh.points).min(dim=0)[0]
+            # Cannot convert warp array -> pytorch tensor
+            # We have to do conversion warp array -> numpy array -> pytorch tensor
+            mesh_points = torch.from_numpy(mesh.points.numpy())
+            curr_bounds[0] = mesh_points.max(dim=0)[0]
+            curr_bounds[1] = mesh_points.min(dim=0)[0]
             bounds.append(curr_bounds)
         bounds = torch.vstack(bounds)
         x_min, y_min, z_min = bounds[:, 0].min().item(), bounds[:, 1].min().item(), bounds[:, 2].min().item()
