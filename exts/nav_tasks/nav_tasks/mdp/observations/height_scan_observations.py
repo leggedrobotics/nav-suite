@@ -258,7 +258,7 @@ class HeightScanOcculusionModifier:
                 dtype=torch.bool,
             )
             for offset_idx in range(self._sensor_offset_tensor.shape[0]):
-                robot_position = self._asset.data.root_pos_w + math_utils.quat_rotate(
+                robot_position = self._asset.data.root_pos_w + math_utils.quat_apply(
                     self._asset.data.root_quat_w, self._sensor_offset_tensor[offset_idx]
                 )
                 unseen[offset_idx] = self._get_occuled_points(robot_position)
@@ -320,7 +320,7 @@ def height_scan_square_exp_occlu(
     # get the sensor hit points
     ray_hits = sensor.data.ray_hits_w.clone()
     # account for the sensor offset
-    robot_position = asset.data.root_pos_w + math_utils.quat_rotate(
+    robot_position = asset.data.root_pos_w + math_utils.quat_apply(
         asset.data.root_quat_w, torch.tensor([[0.4, 0.0, 0.0]], device=asset.device).repeat(env.num_envs, 1)
     )
     robot_position = robot_position[:, None, :].repeat(1, ray_hits.shape[1], 1)
