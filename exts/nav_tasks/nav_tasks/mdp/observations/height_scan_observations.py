@@ -18,6 +18,14 @@ from isaaclab.sim import SimulationContext
 from isaaclab.utils import configclass
 from isaaclab.utils.warp import raycast_mesh
 
+# Workaround for the fact that MultiMeshRayCaster and raycast_dynamic_meshes are not publicly available
+try:
+    from isaaclab.sensors import MultiMeshRayCaster
+    from isaaclab.utils.warp import raycast_dynamic_meshes
+except ImportError:
+    MultiMeshRayCaster = None
+    raycast_dynamic_meshes = None
+
 if TYPE_CHECKING:
     from isaaclab.envs import ManagerBasedEnv, ManagerBasedRLEnv
 
@@ -100,21 +108,41 @@ def height_scan_door_recognition(
     ray_directions = torch.zeros_like(ray_origins)
     ray_directions[..., 2] = -1.0
 
-    hit_point_down = raycast_mesh(
-        ray_origins,
-        ray_directions,
-        mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
-        max_dist=sensor.cfg.max_distance,
-    )[0]
+    if MultiMeshRayCaster is not None and isinstance(sensor, MultiMeshRayCaster):
+        hit_point_down = raycast_dynamic_meshes(
+            ray_origins,
+            ray_directions,
+            mesh_ids_wp=sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+            max_dist=sensor.cfg.max_distance,
+            mesh_positions_w=sensor._mesh_positions_w if sensor.cfg.track_mesh_transforms else None,
+            mesh_orientations_w=sensor._mesh_orientations_w if sensor.cfg.track_mesh_transforms else None,
+        )[0]
+    else:
+        hit_point_down = raycast_mesh(
+            ray_origins,
+            ray_directions,
+            mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
+            max_dist=sensor.cfg.max_distance,
+        )[0]
 
     ray_directions[..., 2] = 1.0
 
-    hit_point_up = raycast_mesh(
-        ray_origins,
-        ray_directions,
-        mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
-        max_dist=sensor.cfg.max_distance,
-    )[0]
+    if MultiMeshRayCaster is not None and isinstance(sensor, MultiMeshRayCaster):
+        hit_point_up = raycast_dynamic_meshes(
+            ray_origins,
+            ray_directions,
+            mesh_ids_wp=sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+            max_dist=sensor.cfg.max_distance,
+            mesh_positions_w=sensor._mesh_positions_w if sensor.cfg.track_mesh_transforms else None,
+            mesh_orientations_w=sensor._mesh_orientations_w if sensor.cfg.track_mesh_transforms else None,
+        )[0]
+    else:
+        hit_point_up = raycast_mesh(
+            ray_origins,
+            ray_directions,
+            mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
+            max_dist=sensor.cfg.max_distance,
+        )[0]
 
     lower_height = (
         (hit_point_up[..., 2] < (sensor.data.ray_hits_w[..., 2] - 1e-3))
@@ -230,13 +258,25 @@ class HeightScanOcculusionModifier:
         ray_directions[torch.isinf(ray_directions)] = 0.0
         ray_directions[torch.isnan(ray_directions)] = 0.0
 
-        # raycast from the robot to intended hit positions
-        ray_hits_w = raycast_mesh(
-            robot_position,
-            ray_directions,
-            mesh=self._sensor.meshes[self._sensor.cfg.mesh_prim_paths[0]],
-            max_dist=self._sensor.cfg.max_distance,
-        )[0]
+        if MultiMeshRayCaster is not None and isinstance(self._sensor, MultiMeshRayCaster):
+            ray_hits_w = raycast_dynamic_meshes(
+                robot_position,
+                ray_directions,
+                mesh_ids_wp=self._sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+                max_dist=self._sensor.cfg.max_distance,
+                mesh_positions_w=self._sensor._mesh_positions_w if self._sensor.cfg.track_mesh_transforms else None,
+                mesh_orientations_w=(
+                    self._sensor._mesh_orientations_w if self._sensor.cfg.track_mesh_transforms else None
+                ),
+            )[0]
+        else:
+            # raycast from the robot to intended hit positions
+            ray_hits_w = raycast_mesh(
+                robot_position,
+                ray_directions,
+                mesh=self._sensor.meshes[self._sensor.cfg.mesh_prim_paths[0]],
+                max_dist=self._sensor.cfg.max_distance,
+            )[0]
 
         # get not visible parts of the height-scan
         unseen = torch.norm(ray_hits_w - self._sensor.data.ray_hits_w, dim=2) > self.cfg.offset_threshold
@@ -331,12 +371,22 @@ def height_scan_square_exp_occlu(
     ray_directions[torch.isnan(ray_directions)] = 0.0
 
     # raycast from the robot to intended hit positions
-    ray_hits_w = raycast_mesh(
-        robot_position,
-        ray_directions,
-        mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
-        max_dist=sensor.cfg.max_distance,
-    )[0]
+    if MultiMeshRayCaster is not None and isinstance(sensor, MultiMeshRayCaster):
+        ray_hits_w = raycast_dynamic_meshes(
+            robot_position,
+            ray_directions,
+            mesh_ids_wp=sensor._mesh_ids_wp,  # list with shape num_envs x num_meshes_per_env
+            max_dist=sensor.cfg.max_distance,
+            mesh_positions_w=sensor._mesh_positions_w if sensor.cfg.track_mesh_transforms else None,
+            mesh_orientations_w=sensor._mesh_orientations_w if sensor.cfg.track_mesh_transforms else None,
+        )[0]
+    else:
+        ray_hits_w = raycast_mesh(
+            robot_position,
+            ray_directions,
+            mesh=sensor.meshes[sensor.cfg.mesh_prim_paths[0]],
+            max_dist=sensor.cfg.max_distance,
+        )[0]
 
     # get not visible parts of the height-scan
     unseen = torch.norm(ray_hits_w - ray_hits, dim=2) > 0.01
@@ -402,6 +452,7 @@ def height_scan_square_exp_occlu_with_door_recognition(
         shape,
         door_height_thres=door_height_thres,
         offset=offset,
+        clip_height=clip_height,
         return_height=False,
     )
     return height_scan_square_exp_occlu(env, asset_cfg, sensor_cfg, shape, offset, clip_height)
