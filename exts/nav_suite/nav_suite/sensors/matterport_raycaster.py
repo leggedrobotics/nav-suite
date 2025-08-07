@@ -145,7 +145,7 @@ class MatterportRayCaster(RayCaster):
         self._data.quat_w[env_ids] = quat_w
 
         # ray cast based on the sensor poses
-        if self.cfg.attach_yaw_only:
+        if self.cfg.ray_alignment == "yaw":
             # only yaw orientation is considered and directions are not rotated
             ray_starts_w = quat_apply_yaw(quat_w.repeat(1, self.num_rays), self.ray_starts[env_ids])
             ray_starts_w += pos_w.unsqueeze(1)
