@@ -78,6 +78,9 @@ class StairsRampTerrainCfg(SubTerrainBaseCfg):
     no_free_space_front: bool = True
     """Stairs and Ramp start at the same position. Defaults to False."""
 
+    random_state_file: str | None = None
+    """The file to load the numpy random state from to make the terrain generation deterministic. Defaults to None."""
+
 
 @configclass
 class StairsRampEvalTerrainCfg(StairsRampTerrainCfg):
