@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 import numpy as np
+import pickle as pkl
 import trimesh
 from typing import TYPE_CHECKING
 
@@ -71,6 +72,11 @@ def stairs_ramp_terrain(
             f"{step_height * num_steps} and final ramp length of {ramp_height}."
         )
 
+    if cfg.random_state_file is not None:
+        with open(cfg.random_state_file, "rb") as f:
+            np_random_state = pkl.load(f)
+        np.random.set_state(np_random_state)
+        
     # get the width of the stairs and ramp
     random_width = np.random.uniform(-cfg.width_randomization, cfg.width_randomization)
     stairs_width = (cfg.size[1] - 2 * cfg.border_width) / 2 + random_width
