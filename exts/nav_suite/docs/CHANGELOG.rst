@@ -4,15 +4,11 @@ Changelog
 0.2.4 (2025-08-08)
 ~~~~~~~~~~~~~~~~~~
 
-Changed
-^^^^^^^
-
-- Renamed configuration option ``attach_yaw_only`` to ``ray_alignment`` according to IsaacLab API changes in 2.1.1.
-
 Fixes
 ^^^^^
 
-- Fixed dtype mismatch in :class:`nav_suite.collectors.TrajectorySampling` by removing the unnecessary casting of trajectory lengths to ``torch.int64``.
+- Fixed dtype mismatch in :class:`nav_suite.collectors.TrajectorySampling` by removing the casting of trajectory lengths to ``torch.int64``.
+- Renamed configuration option ``attach_yaw_only`` to  ``ray_alignment`` according to IsaacLab API changes in 2.1.1
 
 
 0.2.3 (2025-06-11)
