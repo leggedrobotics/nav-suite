@@ -253,3 +253,51 @@ def change_reward_weight(
         reward.weight = weight_range[0] + (weight_range[1] - weight_range[0]) * math.exp(5 * (progress - 1))
 
     return reward.weight
+
+
+def change_reward_param(
+    env: ManagerBasedRLEnv,
+    env_ids: Sequence[int],
+    reward_name: str,
+    param_name: str,
+    param_range: tuple[float, float],
+    step_range: tuple[int, int],
+    mode: Literal["linear", "exponential"] = "linear",
+):
+    """Curriculum that changes a reward parameter.
+    For the exponential mode, the scaling throughout the defined range is as demonstrated in the following plot:
+    .. image:: {NAVSUITE_TASKS_EXT_DIR}/docs/figures/exp_decay.png
+        :alt: Exponential Decay
+    Args:
+        env: The learning environment.
+        env_ids: Not used since all environments are affected. But default in the function call.
+        param_name: The name of the reward parameter.
+        param_range: The range of the reward parameter.
+        step_range: The range of the steps where the curriculum term is active.
+        mode: The mode of the reward weight change. Options are "linear" or "exponential".
+    Returns:
+        The new reward parameter.
+    """
+    reward = env.reward_manager.get_term_cfg(reward_name)
+
+    if not hasattr(reward, param_name):
+        raise ValueError(f"Reward term '{reward_name}' does not have a parameter '{param_name}'.")
+
+    # If before the curriculum starts, keep the original weight
+    if env.common_step_counter < step_range[0]:
+        return getattr(reward, param_name)
+
+    # If after the curriculum ends, set to final weight
+    if env.common_step_counter >= step_range[1]:
+        setattr(reward, param_name, param_range[1])
+        return getattr(reward, param_name)
+
+    # Normalize the progress between 0 and 1
+    progress = (env.common_step_counter - step_range[0]) / (step_range[1] - step_range[0])
+
+    if mode == "linear":
+        setattr(reward, param_name, param_range[0] + (param_range[1] - param_range[0]) * progress)
+    elif mode == "exponential":
+        setattr(reward, param_name, param_range[0] + (param_range[1] - param_range[0]) * math.exp(5 * (progress - 1)))
+
+    return getattr(reward, param_name)

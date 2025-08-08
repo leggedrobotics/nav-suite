@@ -153,7 +153,7 @@ class GoalCommand(GoalCommandBaseTerm):
 
     @property
     def command(self) -> torch.Tensor:
-        """The desired base pose in base frame. Shape is (num_envs, 7)."""
+        """The desired base pose in base frame. Shape is (num_envs, 4)."""
         return torch.cat((self.pos_command_b, self.heading_command_b.unsqueeze(-1)), dim=1)
 
     @property

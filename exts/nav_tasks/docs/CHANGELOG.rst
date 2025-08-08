@@ -1,6 +1,33 @@
 Changelog
 ---------
 
+0.3.10 (2025-08-08)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+- Updated configuration option ``attach_yaw_only`` to ``ray_alignment`` across sensor and environment configurations according to IsaacLab API changes in 2.1.1
+- Updated math calls with :func:`isaaclab.utils.math.quat_rotate` according to IsaacLab API changes in 2.1.1.
+- Updated :meth:`nav_tasks.mdp.commands.FixGoalCommand.command` to return only position plus heading instead of just position.
+
+Added
+^^^^^
+
+- Added ``momentum`` feature and corresponding configuration options to :class:`nav_tasks.mdp.actions.NavigationSE2Action` and :class:`nav_tasks.mdp.actions.NavigationSE2ActionCfg`.
+- Added occlusion-aware height scan utilities that better handle door recognition and terrain occlusions.
+- Added curriculum :func:`nav_tasks.mdp.curriculums.change_reward_param`.
+- Added ``random_state_file`` option from :class:`nav_tasks.terrains.StairsRampTerrainCfg`.
+
+Fixes
+^^^^^
+
+- Fixed height scan clipping in :func:`nav_tasks.mdp.observations.height_scan_clipped` to correctly apply limits.
+- Fixed dtype mismatch in sample selection inside :class:`nav_tasks.collectors.TrajectorySampling` by casting indices to ``torch.int64``.
+- Fixed third-party module list in ``pyproject.toml`` to new Isaac Lab package names.
+- Fixed docstring of :meth:`nav_tasks.mdp.commands.GoalCommand.command` to return pose with shape ``(num_envs, 4)`` instead of ``(num_envs, 7)``.
+
+
 0.3.9 (2025-08-04)
 ~~~~~~~~~~~~~~~~~~
 

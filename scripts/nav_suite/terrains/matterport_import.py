@@ -75,7 +75,7 @@ class TestTerrainCfg(InteractiveSceneCfg):
     height_scanner = MatterportRayCasterCfg(
         prim_path="{ENV_REGEX_NS}/Robot/base",
         offset=MatterportRayCasterCfg.OffsetCfg(pos=(0.0, 0.0, 1.0)),
-        attach_yaw_only=True,
+        ray_alignment="yaw",
         pattern_cfg=patterns.GridPatternCfg(resolution=0.1, size=[2.0, 2.0]),
         debug_vis=True,
         mesh_prim_paths=[MATTERPORT_PLY_PATH],
