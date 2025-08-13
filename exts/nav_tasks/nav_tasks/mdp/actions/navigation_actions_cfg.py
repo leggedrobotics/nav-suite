@@ -28,6 +28,11 @@ class NavigationSE2ActionCfg(ActionTermCfg):
     low_level_policy_file: str = MISSING
     """Path to the low level policy file."""
 
+    freeze_low_level_policy: bool = True
+    """Whether to freeze the low level policy.
+
+    Can improve performance but will also eliminate possible functions such as `reset`."""
+
     low_level_obs_group: str = "low_level_policy"
     """Observation group of the low level policy."""
 

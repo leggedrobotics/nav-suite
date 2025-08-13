@@ -49,16 +49,15 @@ def height_scan_clipped(
     env: ManagerBasedRLEnv,
     sensor_cfg: SceneEntityCfg,
     offset: float = 0.5,
-    clip_height: tuple[float, float] = (-1.0, 0.5),
+    clip_height: tuple[float, float] | None = (-1.0, 0.5),
 ) -> torch.Tensor:
-    """Height scan from the given sensor w.r.t. the sensor's frame.
-
-    The provided offset (Defaults to 0.5) is subtracted from the returned values.
-    """
+    """Height scan from the given sensor w.r.t. the sensor's frame."""
     # get the bounded height scan
     height = height_scan_bounded(env, sensor_cfg, offset)
-    # clip to max observable height
-    return torch.clip(height, clip_height[0], clip_height[1])
+    if clip_height is not None:
+        # clip to max observable height
+        height = torch.clip(height, clip_height[0], clip_height[1])
+    return height
 
 
 def height_scan_square(

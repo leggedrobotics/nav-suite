@@ -1,6 +1,22 @@
 Changelog
 ---------
 
+
+0.3.11 (2025-08-13)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+
+- Added ``freeze_low_level_policy`` option to :class:`nav_tasks.mdp.actions.NavigationSE2ActionCfg` to allow to not freeze the low level policy.
+- Added ``nan_fill_value`` option to :func:`nav_tasks.mdp.observations.camera_observations:camera_image` to allow to fill NaNs with a specific value.
+
+Changed
+^^^^^^^
+
+- Updated :func:`nav_tasks.mdp.observations.height_scan_observations:height_scan_clipped` to make clipping optional.
+
+
 0.3.10 (2025-08-08)
 ~~~~~~~~~~~~~~~~~~
 

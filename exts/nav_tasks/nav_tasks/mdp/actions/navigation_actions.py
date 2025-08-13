@@ -30,7 +30,9 @@ class NavigationSE2Action(ActionTerm):
         # load policies
         file_bytes = read_file(self.cfg.low_level_policy_file)
         self.low_level_policy = torch.jit.load(file_bytes, map_location=self.device)
-        self.low_level_policy = torch.jit.freeze(self.low_level_policy.eval())
+        self.low_level_policy.eval()
+        if self.cfg.freeze_low_level_policy:
+            self.low_level_policy = torch.jit.freeze(self.low_level_policy)
 
         # prepare joint position actions
         if not isinstance(self.cfg.low_level_action, list):
