@@ -75,7 +75,7 @@ def main():
     # Now we are ready!
     omni.log.info("Setup complete...")
 
-    # sample viewpoints
+    # sample paths
     explorer.sample_paths(1000, 0.5, 10.0)
 
     print("Trajectories sampled and simulation will continue to render the environment...")

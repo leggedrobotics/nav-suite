@@ -1,6 +1,27 @@
 Changelog
 ---------
 
+
+0.2.5 (2025-08-13)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+
+- Added sampling support to other sensor data (such as RayCasters) to :class:`nav_suite.collectors.SensorDataSampling`
+  for sampling sensor data from the environment
+    - RayCaster implementation in :class:`nav_suite.collectors.sensors.RayCasterSensor`
+
+Changed
+^^^^^^^
+
+- Renamed :class:`nav_suite.collectors.ViewpointSampling` to :class:`nav_suite.collectors.SensorSampling` and
+  :class:`nav_suite.collectors.ViewpointSamplingCfg` to :class:`nav_suite.collectors.SensorSamplingCfg`
+- Sensor data extraction is now done in individual classes for each sensor type. The logic for camera data prev.
+  included in :class:`nav_suite.collectors.ViewpointSampling` is now extracted in
+  :class:`nav_suite.collectors.sensors.CameraSensor`.
+
+
 0.2.4 (2025-08-08)
 ~~~~~~~~~~~~~~~~~~
 
