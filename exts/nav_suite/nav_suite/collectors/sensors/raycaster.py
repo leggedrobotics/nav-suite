@@ -1,4 +1,7 @@
-
+# Copyright (c) 2025, The Nav-Suite Project Developers (https://github.com/leggedrobotics/nav-suite/blob/main/CONTRIBUTORS.md).
+# All rights reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 from __future__ import annotations
 
@@ -96,10 +99,7 @@ class RaycasterSensor(SensorBase):
                         curr_output = modifier.func(curr_output, **modifier.params)
                 if isinstance(obs_term_cfg.noise, noise.NoiseCfg):
                     curr_output = obs_term_cfg.noise.func(curr_output, obs_term_cfg.noise)
-                elif (
-                    isinstance(obs_term_cfg.noise, noise.NoiseModelCfg)
-                    and obs_term_cfg.noise.func is not None
-                ):
+                elif isinstance(obs_term_cfg.noise, noise.NoiseModelCfg) and obs_term_cfg.noise.func is not None:
                     curr_output = obs_term_cfg.noise.func(curr_output)
                 if obs_term_cfg.clip:
                     curr_output = curr_output.clip_(min=obs_term_cfg.clip[0], max=obs_term_cfg.clip[1])
@@ -115,10 +115,15 @@ class RaycasterSensor(SensorBase):
         for env_id in env_ids:
             if isinstance(output, dict):
                 for key, value in output.items():
-                    np.save(os.path.join(filedir, "raycaster", key, f"{self._idx}".zfill(4) + ".npy"), value[env_id].cpu().numpy())
+                    np.save(
+                        os.path.join(filedir, "raycaster", key, f"{self._idx}".zfill(4) + ".npy"),
+                        value[env_id].cpu().numpy(),
+                    )
             else:
                 # save the output
-                np.save(os.path.join(filedir, "raycaster", f"{self._idx}".zfill(4) + ".npy"), output[env_id].cpu().numpy())
+                np.save(
+                    os.path.join(filedir, "raycaster", f"{self._idx}".zfill(4) + ".npy"), output[env_id].cpu().numpy()
+                )
 
             # increment the index
             self._idx += 1
