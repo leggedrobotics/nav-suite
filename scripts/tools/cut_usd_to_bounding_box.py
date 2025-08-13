@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """
-Script to cut a USD file to a certain bounding box.
+This script implements a tool to cut a USD scene to a bounding box.
 """
 
 """Launch Isaac Sim Simulator first."""

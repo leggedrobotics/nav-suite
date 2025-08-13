@@ -44,7 +44,7 @@ data-sampling approaches, typical RL terms and a benchmarking environment. Curre
 This extension lets you load realistic terrains complete with rich semantic annotations, run fast traversability analysis, and render large batches of multi-modal data. It exposes three core modules:
 
   - **Environment Importer** – load Matterport, Unreal/Carla, generated or USD terrains and expose all geometric / semantic domains&nbsp;→ [Details](exts/nav_suite/docs/README.md#environment-importer)
-  - **Data Collectors** – sample trajectories, viewpoints and render multi-modal data from any imported world&nbsp;→ [Details](exts/nav_suite/docs/README.md#data-collectors)
+  - **Data Collectors** – sample trajectories and render multi-modal sensor data from any imported world&nbsp;→ [Details](exts/nav_suite/docs/README.md#data-collectors)
   - **Terrain Analysis** – build traversability height-maps and graphs for path planning and curriculum tasks&nbsp;→ [Details](exts/nav_suite/docs/README.md#traversabilty-analysis)
 
 ## `nav_tasks` Extension
@@ -177,7 +177,7 @@ Here we provide a set of examples that demonstrate how to use the different part
       - [Import the Nvidia Warehouse Environment](scripts/nav_suite/terrains/warehouse_import.py)
   - ``collector``
       - [Sample Trajectories from Matterport](scripts/nav_suite/collector/matterport_trajectory_sampling.py)
-      - [Sample Viewpoints and Render Images from Carla (Unreal Engine)](scripts/nav_suite/collector/carla_viewpoint_sampling.py)
+      - [Sample Camera Viewpoints and Render Images from Carla (Unreal Engine)](scripts/nav_suite/collector/carla_sensor_data_sampling.py)
 
 ## Citing
 

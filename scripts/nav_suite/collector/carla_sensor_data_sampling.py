@@ -1,7 +1,4 @@
-# Copyright (c) 2025, The Nav-Suite Project Developers (https://github.com/leggedrobotics/nav-suite/blob/main/CONTRIBUTORS.md).
-# All rights reserved.
-#
-# SPDX-License-Identifier: Apache-2.0
+
 
 """
 This script demonstrates how to use the rigid objects class.
@@ -38,7 +35,7 @@ from isaaclab.utils import configclass
 from isaaclab.utils.timer import Timer
 
 from nav_suite import NAVSUITE_DATA_DIR
-from nav_suite.collectors import ViewpointSampling, ViewpointSamplingCfg
+from nav_suite.collectors import CameraSensorCfg, SensorDataSampling, SensorDataSamplingCfg
 from nav_suite.terrains import NavTerrainImporterCfg
 
 """
@@ -111,7 +108,7 @@ def main():
     sim.set_camera_view([130, -125, 30], [100, -130, 0.5])
 
     # setup sampling config
-    cfg = ViewpointSamplingCfg()
+    cfg = SensorDataSamplingCfg(sensor_data_handlers=[CameraSensorCfg()])
     # overwrite semantic cost mapping and adjust parameters based on larger map
     cfg.terrain_analysis.semantic_cost_mapping = os.path.join(
         NAVSUITE_DATA_DIR, "unreal", "town01", "semantic_costs.yaml"
@@ -132,15 +129,15 @@ def main():
     with Timer("[INFO]: Time taken for simulation start", "simulation_start"):
         sim.reset()
 
-    explorer = ViewpointSampling(cfg, scene)
+    data_sampler = SensorDataSampling(cfg, scene)
     # Now we are ready!
     omni.log.info("Setup complete...")
 
-    # sample and render viewpoints
-    samples = explorer.sample_viewpoints(9560)
-    explorer.render_viewpoints(samples)
+    # sample and render sensor data
+    samples = data_sampler.sample_sensor_data(9560)
+    data_sampler.render_sensor_data(samples)
     print(
-        "Viewpoints sampled and rendered will continue to render the environment and visualize the last camera"
+        "Sensor data sampled and rendered will continue to render the environment and visualize the last camera"
         " positions..."
     )
 
@@ -151,7 +148,7 @@ def main():
         # Perform step
         sim.render()
         # Update buffers
-        explorer.scene.update(sim_dt)
+        data_sampler.scene.update(sim_dt)
 
 
 if __name__ == "__main__":

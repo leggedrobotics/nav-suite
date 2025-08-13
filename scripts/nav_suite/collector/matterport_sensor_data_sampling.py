@@ -1,7 +1,4 @@
-# Copyright (c) 2025, The Nav-Suite Project Developers (https://github.com/leggedrobotics/nav-suite/blob/main/CONTRIBUTORS.md).
-# All rights reserved.
-#
-# SPDX-License-Identifier: Apache-2.0
+
 
 """
 This script demonstrates how to use the rigid objects class.
@@ -37,7 +34,7 @@ from isaaclab.sim import SimulationContext
 from isaaclab.utils.timer import Timer
 
 from nav_suite import NAVSUITE_DATA_DIR
-from nav_suite.collectors import ViewpointSampling, ViewpointSamplingCfg
+from nav_suite.collectors import CameraSensorCfg, SensorDataSampling, SensorDataSamplingCfg
 from nav_suite.terrain_analysis import TerrainAnalysisCfg
 
 """
@@ -53,11 +50,12 @@ def main():
     sim_cfg = sim_utils.SimulationCfg()
     sim = SimulationContext(sim_cfg)
 
-    cfg = ViewpointSamplingCfg(
+    cfg = SensorDataSamplingCfg(
+        sensor_data_handlers=[CameraSensorCfg()],
         terrain_analysis=TerrainAnalysisCfg(
             semantic_cost_mapping=os.path.join(NAVSUITE_DATA_DIR, "matterport", "semantic_costs.yaml"),
             raycaster_sensor="camera_0",
-        )
+        ),
     )
 
     # construct the scene
@@ -69,15 +67,15 @@ def main():
     with Timer("[INFO]: Time taken for simulation start", "simulation_start"):
         sim.reset()
 
-    explorer = ViewpointSampling(cfg, scene)
+    data_sampler = SensorDataSampling(cfg, scene)
     # Now we are ready!
     omni.log.info("Setup complete...")
 
-    # sample and render viewpoints
-    samples = explorer.sample_viewpoints(args_cli.num_samples)
-    explorer.render_viewpoints(samples)
+    # sample and render sensor data
+    samples = data_sampler.sample_sensor_data(args_cli.num_samples)
+    data_sampler.render_sensor_data(samples)
     print(
-        "Viewpoints sampled and rendered will continue to render the environment and visualize the last camera"
+        "Sensor data sampled and rendered will continue to render the environment and visualize the last camera"
         " positions..."
     )
 
@@ -88,7 +86,7 @@ def main():
         # Perform step
         sim.render()
         # Update buffers
-        explorer.scene.update(sim_dt)
+        data_sampler.scene.update(sim_dt)
 
 
 if __name__ == "__main__":
