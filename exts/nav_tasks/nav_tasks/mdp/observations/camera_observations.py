@@ -22,7 +22,11 @@ if TYPE_CHECKING:
 
 
 def camera_image(
-    env: ManagerBasedEnv, sensor_cfg: SceneEntityCfg, data_type: str = "distance_to_image_plane", flatten: bool = False
+    env: ManagerBasedEnv,
+    sensor_cfg: SceneEntityCfg,
+    data_type: str = "distance_to_image_plane",
+    flatten: bool = False,
+    nan_fill_value: float | None = None,
 ) -> torch.Tensor:
     """Camera image Observations.
 
@@ -34,6 +38,7 @@ def camera_image(
         sensor_cfg: The name of the sensor.
         data_type: The type of data to extract from the sensor. Default is "distance_to_image_plane".
         flatten: If True, the image will be flattened to 1D. Default is False.
+        nan_fill_value: The value to fill nan/inf values with. If None, the maximum distance of the sensor will be used.
 
     Returns:
         The image data."""
@@ -43,8 +48,9 @@ def camera_image(
     img = sensor.data.output[data_type].clone()
 
     if data_type == "distance_to_image_plane":
-        img[torch.isnan(img)] = sensor.cfg.max_distance
-        img[torch.isinf(img)] = sensor.cfg.max_distance
+        if nan_fill_value is None:
+            nan_fill_value = sensor.cfg.max_distance
+        img = torch.nan_to_num(img, nan=nan_fill_value, posinf=nan_fill_value, neginf=0.0)
 
     # if type torch.uint8, convert to float and scale between 0 and 1
     if img.dtype == torch.uint8:
