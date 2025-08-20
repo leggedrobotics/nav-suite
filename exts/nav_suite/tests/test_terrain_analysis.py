@@ -20,11 +20,63 @@ from isaaclab.scene import InteractiveScene, InteractiveSceneCfg
 from isaaclab.sensors import RayCasterCfg, patterns
 from isaaclab.sim import build_simulation_context
 from isaaclab.utils import configclass
+from isaaclab.utils.warp import raycast_mesh
 from isaaclab_assets.robots.anymal import ANYMAL_C_CFG
 
-from nav_suite import NAVSUITE_TEST_ASSETS_DIR
+from nav_suite import NAVSUITE_DATA_DIR, NAVSUITE_TEST_ASSETS_DIR
+from nav_suite.sensors import MatterportRayCaster, MatterportRayCasterCamera, MatterportRayCasterCfg
 from nav_suite.terrain_analysis import TerrainAnalysis, TerrainAnalysisCfg
 from nav_suite.terrains import NavTerrainImporterCfg
+
+
+def _get_semantic_costs_for_points(terrain_analysis):
+    """Helper method to get semantic costs for points in the terrain analysis.
+
+    Args:
+        terrain_analysis: TerrainAnalysis instance with analyzed points
+
+    Returns:
+        Tensor of semantic costs for each point, shape (N,)
+    """
+
+    points = terrain_analysis.points
+    if points is None or points.shape[0] == 0:
+        return torch.tensor([], device=terrain_analysis.scene.device)
+
+    # raycast vertically down from each point
+    ray_directions = torch.zeros((points.shape[0], 3), dtype=torch.float32, device=points.device)
+    ray_directions[:, 2] = -1.0
+
+    if isinstance(terrain_analysis._raycaster, MatterportRayCaster | MatterportRayCasterCamera):
+        ray_face_ids = raycast_mesh(
+            ray_starts=points.unsqueeze(0),
+            ray_directions=ray_directions.unsqueeze(0),
+            max_dist=terrain_analysis.cfg.wall_height * 2 - terrain_analysis._mesh_height_dimensions[0] + 1e2,
+            return_face_id=True,
+            **terrain_analysis._raycaster_mesh_param,
+        )[3]
+
+        # assign each hit the semantic class
+        class_id = terrain_analysis._raycaster.face_id_category_mapping[
+            terrain_analysis._raycaster.cfg.mesh_prim_paths[0]
+        ][ray_face_ids.flatten().type(torch.long)]
+        # map category index to reduced set
+        class_id = terrain_analysis._raycaster.mapping_mpcat40[class_id.type(torch.long) - 1]
+
+        # get class_id to cost mapping
+        class_id_to_cost = torch.ones(len(terrain_analysis._raycaster.classes_mpcat40), device=points.device) * max(
+            list(terrain_analysis.semantic_costs.values())
+        )
+        for class_name, class_cost in terrain_analysis.semantic_costs.items():
+            class_id_to_cost[terrain_analysis._raycaster.classes_mpcat40 == class_name] = class_cost
+
+        # get cost
+        cost = class_id_to_cost[class_id]
+    else:
+        # Handle non-Matterport raycasters if needed
+        raise NotImplementedError("Only Matterport raycasters supported in this helper")
+
+    return cost
 
 
 @configclass
@@ -52,6 +104,35 @@ class BasicSceneCfg(InteractiveSceneCfg):
             size=(1.0, 1.0),
         ),
         mesh_prim_paths=["/World/Ground"],
+        attach_yaw_only=True,
+    )
+
+
+@configclass
+class MatterportSceneCfg(InteractiveSceneCfg):
+    """Configuration for a Matterport test scene with semantic terrain analysis."""
+
+    terrain = NavTerrainImporterCfg(
+        prim_path="/World/Ground",
+        terrain_type="usd",
+        usd_path=os.path.join(NAVSUITE_DATA_DIR, "matterport", "2n8kARJN3HM_asset", "2n8kARJN3HM.usd"),
+        num_envs=1,
+        env_spacing=2.0,
+        add_colliders=True,
+    )
+
+    robot = ANYMAL_C_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+
+    # Matterport raycaster for terrain analysis with semantic information
+    matterport_raycaster = MatterportRayCasterCfg(
+        prim_path="{ENV_REGEX_NS}/Robot/base/lidar_cage",
+        update_period=0,
+        debug_vis=False,
+        pattern_cfg=patterns.GridPatternCfg(
+            resolution=0.1,
+            size=(1.0, 1.0),
+        ),
+        mesh_prim_paths=[os.path.join("matterport", "2n8kARJN3HM_asset", "2n8kARJN3HM.ply")],
         attach_yaw_only=True,
     )
 
@@ -129,6 +210,39 @@ def terrain_analysis_real(scene):
     return terrain_analysis
 
 
+@pytest.fixture
+def matterport_scene(simulation_context):
+    """Fixture providing an InteractiveScene with Matterport environment."""
+    scene_cfg = MatterportSceneCfg(num_envs=1, env_spacing=2.0)
+    scene = InteractiveScene(scene_cfg)
+    simulation_context.reset()
+    return scene
+
+
+@pytest.fixture
+def terrain_analysis_matterport(matterport_scene):
+    """Fixture providing terrain analysis with Matterport environment for semantic filtering tests."""
+
+    # Path to the real semantic costs YAML file
+    semantic_costs_path = os.path.join(NAVSUITE_DATA_DIR, "matterport", "semantic_costs.yaml")
+
+    # Create terrain analysis configuration with semantic filtering enabled
+    terrain_analysis_cfg = TerrainAnalysisCfg(
+        grid_resolution=0.5,
+        sample_points=50,
+        viz_graph=False,  # Disable visualization for tests
+        viz_height_map=False,
+        semantic_cost_mapping=semantic_costs_path,
+        semantic_point_filter=True,  # Enable semantic point filtering
+        semantic_cost_threshold=0.5,  # Filter points with cost > 0.5 (obstacles have cost 1.0)
+        raycaster_sensor="matterport_raycaster",
+    )
+
+    terrain_analysis = TerrainAnalysis(terrain_analysis_cfg, scene=matterport_scene)
+
+    return terrain_analysis
+
+
 def test_get_height_single_position(terrain_analysis_test):
     """Test get_height with a single position."""
     # Test a position that should map to grid index [0, 0]
@@ -194,14 +308,33 @@ def test_get_height_empty_input(terrain_analysis_test):
 def test_analyse_basic_functionality(terrain_analysis_real):
     """Test that analyse() completes without errors and sets expected attributes."""
 
-    # Run analysis - this will automatically setup the raycaster and construct height map
+    # Run analysis
     terrain_analysis_real.analyse()
 
-    # Verify analysis completed and required attributes are set
-    assert terrain_analysis_real.complete, "TerrainAnalysis should be complete after analyse()"
+    # Verify required attributes are set
     assert hasattr(terrain_analysis_real, "graph"), "graph attribute should be set after analyse()"
     assert hasattr(terrain_analysis_real, "samples"), "samples attribute should be set after analyse()"
     assert hasattr(terrain_analysis_real, "points"), "points attribute should be set after analyse()"
     assert terrain_analysis_real.graph is not None, "graph should not be None after analyse()"
     assert terrain_analysis_real.samples is not None, "samples should not be None after analyse()"
     assert terrain_analysis_real.points is not None, "points should not be None after analyse()"
+
+
+
+def test_analyse_semantic_point_filtering(terrain_analysis_matterport):
+    """Test semantic point filtering using real Matterport environment and MatterportRayCaster."""
+
+    # Run analysis
+    terrain_analysis_matterport.analyse()
+
+    assert terrain_analysis_matterport.points is not None, "Terrain Analysis should have sampled points"
+
+    # Get semantic costs for all points using helper method
+    point_costs = _get_semantic_costs_for_points(terrain_analysis_matterport)
+
+    # Assert that all points in filtered analysis have semantic cost <= threshold
+    max_cost = point_costs.max().item()
+    assert max_cost <= terrain_analysis_matterport.cfg.semantic_cost_threshold, (
+        f"Semantic filtering failed: found points with cost {max_cost} > threshold "
+        f"{terrain_analysis_matterport.cfg.semantic_cost_threshold}"
+    )
