@@ -12,7 +12,7 @@ from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from isaaclab.assets import Articulation
-from isaaclab.utils.math import quat_apply_inverse, sample_uniform, yaw_quat
+from isaaclab.utils.math import quat_apply_inverse, sample_uniform, wrap_to_pi, yaw_quat
 
 from nav_suite.terrain_analysis import TerrainAnalysis, TerrainAnalysisSingleton
 
@@ -41,6 +41,9 @@ class FixGoalCommand(GoalCommandBaseTerm):
         Args:
             cfg: The configuration parameters for the command.
             env: The environment object.
+
+        Raises:
+            AssertionError: If ``trajectory_num_samples`` is not divisible by ``num_envs``.
         """
         super().__init__(cfg, env)
         # -- robot
@@ -94,6 +97,10 @@ class FixGoalCommand(GoalCommandBaseTerm):
             torch.zeros((self.num_envs, 1), device=self.device),
         ])
 
+        # heading command is just straight forward
+        self.heading_command_w = torch.zeros(self.num_envs, device=self.device)
+        self.heading_command_b = torch.zeros_like(self.heading_command_w)
+
         # -- spawn locations (x, y, z, heading)
         self.pos_spawn_w = env.scene.env_origins.clone()
         self.heading_spawn_w = torch.zeros(self.num_envs, device=self.device)
@@ -114,6 +121,11 @@ class FixGoalCommand(GoalCommandBaseTerm):
 
         # EVAL case that maximum number of samples is set
         if self.cfg.trajectory_num_samples is not None:
+            assert self.cfg.trajectory_num_samples % env.num_envs == 0, (
+                "[FixGoalCommand] ``trajectory_num_samples`` must be divisible by ``num_envs`` to allow for equal"
+                " sampling of paths per environment."
+            )
+
             self.all_goals = self.pos_command_w.unsqueeze(1).expand(
                 -1, self.cfg.trajectory_num_samples // env.num_envs, -1
             )
@@ -187,8 +199,8 @@ class FixGoalCommand(GoalCommandBaseTerm):
 
     @property
     def command(self) -> torch.Tensor:
-        """The desired base position in base frame. Shape is (num_envs, 3)."""
-        return self.pos_command_b
+        """The desired base pose in base frame. Shape is (num_envs, 4)."""
+        return torch.cat((self.pos_command_b, self.heading_command_b.unsqueeze(-1)), dim=1)
 
     @property
     def analysis(self) -> TerrainAnalysis | TerrainAnalysisSingleton:
@@ -216,6 +228,7 @@ class FixGoalCommand(GoalCommandBaseTerm):
             self.nb_sampled_paths = 0
             self.not_updated_envs.fill_(False)
             self.prev_not_updated_envs.fill_(False)
+            self.path_idx_per_env.fill_(0)
 
         return super().reset(env_ids=env_ids)
 
@@ -252,11 +265,18 @@ class FixGoalCommand(GoalCommandBaseTerm):
             perturbation[:, 2] = 0.1
             self.pos_spawn_w[env_ids] = self._env.scene.env_origins[env_ids] + perturbation
 
+        # add robot height offset to the spawn position
+        self.pos_spawn_w[env_ids, 2] += self.robot.data.default_root_state[env_ids, 2]
+
     def _update_command(self):
         """Re-target the position command to the current root position."""
         target_vec = self.pos_command_w - self.robot.data.root_pos_w[:, :3]
         target_vec[:, 2] = 0.0  # ignore z component
         self.pos_command_b[:] = quat_apply_inverse(yaw_quat(self.robot.data.root_quat_w), target_vec)
+
+        # update the heading command in the base frame
+        # heading_w is angle world x axis to robot base x axis
+        self.heading_command_b[:] = wrap_to_pi(self.heading_command_w - self.robot.data.heading_w)
 
     def _update_metrics(self):
         """Update metrics."""

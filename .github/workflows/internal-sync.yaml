@@ -1,6 +1,13 @@
+name: Internal Sync
+
 on:
   push:
+    branches:
+      - main
   pull_request_target:
+    branches:
+      - main
+
 jobs:
   move-code:
     runs-on: ubuntu-latest
@@ -17,3 +24,5 @@ jobs:
           sot_branch: main
           destination_repo: leggedrobotics/nav-suite-internal
           destination_branch: main
+          workflow: push
+          # workflow: push --force --init-history  # only necessary for the first time

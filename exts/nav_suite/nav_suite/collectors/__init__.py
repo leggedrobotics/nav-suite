@@ -3,7 +3,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+from .sensor_data_sampling import SensorDataSampling
+from .sensor_data_sampling_cfg import SensorDataSamplingCfg
+from .sensors import *  # noqa: F401, F403
 from .trajectory_sampling import TrajectorySampling
 from .trajectory_sampling_cfg import TrajectorySamplingCfg
-from .viewpoint_sampling import ViewpointSampling
-from .viewpoint_sampling_cfg import ViewpointSamplingCfg

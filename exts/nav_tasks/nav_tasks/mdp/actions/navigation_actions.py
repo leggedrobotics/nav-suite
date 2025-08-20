@@ -30,7 +30,9 @@ class NavigationSE2Action(ActionTerm):
         # load policies
         file_bytes = read_file(self.cfg.low_level_policy_file)
         self.low_level_policy = torch.jit.load(file_bytes, map_location=self.device)
-        self.low_level_policy = torch.jit.freeze(self.low_level_policy.eval())
+        self.low_level_policy.eval()
+        if self.cfg.freeze_low_level_policy:
+            self.low_level_policy = torch.jit.freeze(self.low_level_policy)
 
         # prepare joint position actions
         if not isinstance(self.cfg.low_level_action, list):
@@ -88,6 +90,19 @@ class NavigationSE2Action(ActionTerm):
                     f"Unsupported clip mode: {self.cfg.clip_mode}. Supported modes are 'minmax', 'tanh' and 'none'."
                 )
 
+        # parse momentum
+        if self.cfg.momentum is not None:
+            if isinstance(self.cfg.momentum, (float, int)):
+                self._momentum = float(self.cfg.momentum)
+            elif isinstance(self.cfg.momentum, list):
+                self._momentum = torch.tensor([self.cfg.momentum], device=self.device).repeat(self.num_envs, 1)
+            else:
+                raise ValueError(
+                    f"Unsupported momentum type: {type(self.cfg.momentum)}. Supported types are float, int, and list."
+                )
+        else:
+            self._momentum = 0
+
         # set up buffers
         self._init_buffers()
 
@@ -135,6 +150,11 @@ class NavigationSE2Action(ActionTerm):
         # apply the affine transformations
         self._processed_navigation_velocity_actions *= self._scale
         self._processed_navigation_velocity_actions += self._offset
+
+        # apply a momentum offset
+        self._processed_navigation_velocity_actions += (
+            torch.norm(self._env.scene.articulations["robot"].data.root_lin_vel_b, dim=1, keepdim=True) * self._momentum
+        )
 
     def apply_actions(self):
         """Apply low-level actions for the simulator to the physics engine. This functions is called with the

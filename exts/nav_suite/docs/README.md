@@ -92,35 +92,21 @@ This extensions allows to collect data from the previously loaded environments a
 
     The trajectory sampling can be executed multiple times with different number of sampled trajectories as well as different minimum and maximum lengths.
 
-- `Viewpoint sampling and image rendering`:
+- `Sensor data sampling and rendering`:
 
-    For the viewpoint sampling the same terrain analysis as for the trajectory sampling is executed. The graph and traversability parameters are defined in corresponding [config file](../nav_suite/terrain_analysis/terrain_analysis_cfg.py).
+    For the sensor data sampling the same terrain analysis as for the trajectory sampling is executed. The graph and traversability parameters are defined in corresponding [config file](../nav_suite/terrain_analysis/terrain_analysis_cfg.py).
 
     **Important** for the analysis also regarding the semantic domain, a semantic class to cost mapping has to be defined in the config. Per default, an example cost map for ``matterport`` environments is selected.
 
-    Each node of the prah is a possible viewpoint, with the orientation uniformly sampled between variable bounds. The exact parameters of the sampling can be defined [here](../nav_suite/collectors/viewpoint_sampling_cfg.py).  You can define the ``module`` and the ``class`` of the parameters config that is used for the sampling. An example is provided that is optimized for the legged robot ANYmal and a matterport environment. Please not that this configuration assumes that two cameras are added where the first one has access to semantic information and the second to geoemtric information.
-
-    The number of viepoints that are sampled can be directory defined in the GUI. With the button ``Viewpoint Sampling`` the viewpoints are saved as ``camera_poses`` under the defined directory. Afterwards, click ``Viewpoint Renedering`` to get the final rendered images. The resulting folder structure is as follows:
-
-    ``` graphql
-    cfg.data_dir
-    ├── camera_poses.txt                    # format: x y z qw qx qy qz
-    ├── cfg.depth_cam_name                  # required
-    |   ├── intrinsics.txt                  # K-matrix (3x3)
-    |   ├── distance_to_image_plane         # annotator
-    |   |   ├── xxxx.png                    # images saved with 4 digits, e.g. 0000.png
-    ├── cfg.depth_cam_name                  # optional
-    |   ├── intrinsics.txt                  # K-matrix (3x3)
-    |   ├── distance_to_image_plane         # annotator
-    |   |   ├── xxxx.png                    # images saved with 4 digits, e.g. 0000.png
-    ```
+    Each node of the graph is a possible data sampling point, with the orientation uniformly sampled between variable bounds. The exact parameters of the sampling can be defined [here](../nav_suite/collectors/sensor_data_sampling_cfg.py). How the individual sensor  data is treated is defined in individual sensor modules, i.e., [Camera](../nav_suite/collectors/sensors/camera_cfg.py), [RayCaster](../nav_suite/collectors/sensors/raycaster_cfg.py).
+    An example is provided that is optimized for the legged robot ANYmal and a matterport environment. Please note that this configuration assumes that two cameras are added where the first one has access to semantic information and the second to geometric information.
 
 ### Standalone scripts
 
 Standalone scripts are provided to demonstrate the loading of different environments:
 
   - [Sample Trajectories from Matterport](../../../scripts/nav_suite/collector/matterport_trajectory_sampling.py)
-  - [Sample Viewpoints and Render Images from Carla (Unreal Engine)](../../../scripts/nav_suite/collector/carla_viewpoint_sampling.py)
+  - [Sample Camera Viewpoints and Render Images from Carla (Unreal Engine)](../../../scripts/nav_suite/collector/carla_sensor_data_sampling.py)
 
 
 > [!NOTE] **Matterport Sensors**: \

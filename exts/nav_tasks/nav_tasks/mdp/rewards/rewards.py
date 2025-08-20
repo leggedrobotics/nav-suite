@@ -10,12 +10,41 @@ from typing import TYPE_CHECKING
 
 from isaaclab.assets import Articulation
 from isaaclab.managers import SceneEntityCfg
+from isaaclab.managers.manager_base import ManagerTermBase
+from isaaclab.managers.manager_term_cfg import RewardTermCfg
 from isaaclab.utils.math import wrap_to_pi
 
 if TYPE_CHECKING:
     from isaaclab.envs import ManagerBasedRLEnv
 
     from nav_tasks.mdp import GoalCommand
+
+
+class is_successful_terminated_term(ManagerTermBase):
+    """Reward the agent for successful termination (e.g. goal reached) that correspond to timeouts.
+    The parameters are as follows:
+    * attr:`term_keys`: The termination terms to reward. This can be a string, a list of strings
+      or regular expressions. Default is ".*" which rewards all timeouts.
+    The reward is computed as the sum of the termination terms that are not episodic terminations.
+    This means that the reward is 0 if the episode is terminated due to an episodic timeout. Otherwise,
+    if two termination terms are active, the reward is 2.
+    """
+
+    def __init__(self, cfg: RewardTermCfg, env: ManagerBasedRLEnv):
+        # initialize the base class
+        super().__init__(cfg, env)
+        # find and store the termination terms
+        term_keys = cfg.params.get("term_keys", ".*")
+        self._term_names = env.termination_manager.find_terms(term_keys)
+
+    def __call__(self, env: ManagerBasedRLEnv, term_keys: str | list[str] = ".*") -> torch.Tensor:
+        # Return the unweighted reward for the termination terms
+        reset_buf = torch.zeros(env.num_envs, device=env.device)
+        for term in self._term_names:
+            # Sums over terminations term values to account for multiple terminations in the same step
+            reset_buf += env.termination_manager.get_term(term)
+
+        return (reset_buf * (~env.termination_manager.terminated)).float()
 
 
 def near_goal_stability(

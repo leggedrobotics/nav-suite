@@ -28,6 +28,11 @@ class NavigationSE2ActionCfg(ActionTermCfg):
     low_level_policy_file: str = MISSING
     """Path to the low level policy file."""
 
+    freeze_low_level_policy: bool = True
+    """Whether to freeze the low level policy.
+
+    Can improve performance but will also eliminate possible functions such as `reset`."""
+
     low_level_obs_group: str = "low_level_policy"
     """Observation group of the low level policy."""
 
@@ -63,4 +68,16 @@ class NavigationSE2ActionCfg(ActionTermCfg):
 
     .. note::
         Offset is applied after scaling. If a list is provided, it must be of the same length as the number of action dimensions.
+    """
+
+    momentum: float | list[float] | None = None
+    """Momentum of the action space. Default is None.
+
+    Momentum is computed as the norm of the robot's base linear velocity in the body frame times the momentum factor.
+
+    .. math::
+        momentum = \text{norm}(v_{base}) \times \text{momentum}
+
+    .. note::
+        Momentum is applied after scaling and offset. If a list is provided, it must be of the same length as the number of action dimensions.
     """

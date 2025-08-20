@@ -94,7 +94,6 @@ class GoalCommandBaseTerm(CommandTerm):
         if self.cfg.vis_line:
             # update the line marker
             # calculate the difference vector between the robot root position and the goal position
-            # TODO @tasdep this assumes that robot.data.body_pos_w exists
             difference = self.pos_command_w - self.robot.data.body_pos_w[:, 0, :3]
             translations = self.robot.data.body_pos_w[:, 0, :3]
             # calculate the scale of the arrow (Mx3)
@@ -111,8 +110,6 @@ class GoalCommandBaseTerm(CommandTerm):
             angle = -torch.acos(difference @ x_vec)
             axis = torch.linalg.cross(difference, x_vec.expand_as(difference))
             quat = quat_from_angle_axis(angle, axis)
-
-            # TODO @tasdep add the line up in the air when at goal, requires some assumptions about existence of time at goal termination term
 
             # apply transforms
             self.line_to_goal_visualiser.visualize(

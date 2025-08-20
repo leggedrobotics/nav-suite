@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.2.4 (2025-08-04)
+0.2.6 (2025-08-20)
 ~~~~~~~~~~~~~~~~~~
 
 Added
@@ -10,6 +10,36 @@ Added
 - Added pytest testing suite for :class:`nav_suite.terrains.nav_terrain_importer.NavTerrainImporter`
 - Added :attr:`nav_suite.terrains.nav_terrain_importer_cfg.NavTerrainImporterCfg.random_seed` parameter for deterministic random sampling behavior.
 - Added :attr:`nav_suite.terrains.nav_terrain_importer_cfg.NavTerrainImporterCfg.custom_origins` parameter
+
+
+0.2.5 (2025-08-13)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+
+- Added sampling support to other sensor data (such as RayCasters) to :class:`nav_suite.collectors.SensorDataSampling`
+  for sampling sensor data from the environment
+    - RayCaster implementation in :class:`nav_suite.collectors.sensors.RayCasterSensor`
+
+Changed
+^^^^^^^
+
+- Renamed :class:`nav_suite.collectors.ViewpointSampling` to :class:`nav_suite.collectors.SensorSampling` and
+  :class:`nav_suite.collectors.ViewpointSamplingCfg` to :class:`nav_suite.collectors.SensorSamplingCfg`
+- Sensor data extraction is now done in individual classes for each sensor type. The logic for camera data prev.
+  included in :class:`nav_suite.collectors.ViewpointSampling` is now extracted in
+  :class:`nav_suite.collectors.sensors.CameraSensor`.
+
+
+0.2.4 (2025-08-08)
+~~~~~~~~~~~~~~~~~~
+
+Fixes
+^^^^^
+
+- Fixed dtype mismatch in :class:`nav_suite.collectors.TrajectorySampling` by removing the casting of trajectory lengths to ``torch.int64``.
+- Renamed configuration option ``attach_yaw_only`` to  ``ray_alignment`` according to IsaacLab API changes in 2.1.1
 
 
 0.2.3 (2025-06-11)
