@@ -112,6 +112,9 @@ class NavTasksDepthNavSceneCfg(InteractiveSceneCfg):
             self.front_zed_camera, IMAGE_SIZE_DOWNSAMPLE_FACTOR, IMAGE_SIZE_DOWNSAMPLE_FACTOR
         )
 
+        # turn off the self-collisions
+        self.robot.spawn.articulation_props.enabled_self_collisions = False
+
 
 ##
 # MDP settings
@@ -125,7 +128,7 @@ class ActionsCfg:
     velocity_command = mdp.NavigationSE2ActionCfg(
         asset_name="robot",
         low_level_action=mdp.JointPositionActionCfg(
-            asset_name="robot", joint_names=[".*"], scale=1.0, use_default_offset=False
+            asset_name="robot", joint_names=[".*"], scale=0.5, use_default_offset=True
         ),
         low_level_policy_file=ISAACLAB_NUCLEUS_DIR + "/Policies/ANYmal-C/HeightScan/policy.pt",
     )

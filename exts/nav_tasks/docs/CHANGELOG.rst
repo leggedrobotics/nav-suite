@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+0.3.12 (2025-08-23)
+~~~~~~~~~~~~~~~~~~
+
+Fixed
+^^^^^
+
+- Fixed example RL training action scale and offset in :class:`nav_tasks.configs.env_cfg_base.ActionsCfg` for the low level action.
+
 
 0.3.11 (2025-08-13)
 ~~~~~~~~~~~~~~~~~~
