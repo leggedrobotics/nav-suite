@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from .corridor_cfg import CorridorTerrainCfg
+from .corridor_turn_cfg import CorridorTurnTerrainCfg
 from .maze_terrain_cfg import MazeTerrainCfg
 from .pillar_terrain_cfg import MeshPillarPlannerTestTerrainCfg, MeshPillarTerrainCfg, MeshPillarTerrainDeterministicCfg
 from .quad_stairs_terrain_cfg import MeshQuadPyramidStairsCfg
