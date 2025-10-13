@@ -40,4 +40,8 @@ class CorridorTurnTerrainCfg(SubTerrainBaseCfg):
     The border is a flat terrain with the same height as the terrain.
     """
 
+    border_height: float = 2.5
+    """The height of the border around the terrain (in m).
+    """
+
     # Optionally, add more parameters as needed

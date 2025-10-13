@@ -50,7 +50,7 @@ def corridor_turn_terrain(difficulty: float, cfg: corridor_turn_cfg.CorridorTurn
         # obtain a list of meshes for the border
         border_center = [0.5 * cfg.size[0], 0.5 * cfg.size[1], 0]
         border_inner_size = (cfg.size[0] - 2 * cfg.border_width, cfg.size[1] - 2 * cfg.border_width)
-        make_borders = make_border(cfg.size, border_inner_size, 0.1, border_center)
+        make_borders = make_border(cfg.size, border_inner_size, cfg.border_height, border_center)
         # add the border meshes to the list of meshes
         meshes_list += make_borders
 
